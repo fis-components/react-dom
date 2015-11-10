@@ -1,0 +1,6 @@
+{
+    "repos": "https://github.com/facebook/react.git",
+    "version": "v0.14.2",
+    "name": "react-dom",
+    "main": "react.dom.js"
+}
