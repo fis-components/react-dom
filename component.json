@@ -1,0 +1,13 @@
+{
+    "name": "react-dom",
+    "description": "DOM is a `React.DOM` wrapper with — subjectively — more sanity and awesome helpers",
+    "repos": "https://github.com/EtienneLem/react-dom.git",
+    "main": "react-dom.js",
+    "tag": "master",
+    "reposType": "npm",
+    "dependencies": {},
+    "paths": {
+        "dist": "."
+    },
+    "version": "0.1.0"
+}
