@@ -1,42 +1,92 @@
-/**
- * ReactDOM v0.14.5
- *
- * Copyright 2013-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-// Based off https://github.com/ForbesLindesay/umd/blob/master/template.js
-;(function(f) {
-  // CommonJS
-  if (typeof exports === "object" && typeof module !== "undefined") {
-    module.exports = f(require('react'));
+/*
+* react-dom v0.1.0
+* https://github.com/EtienneLem/react-dom
+*
+* Copyright 2014, Etienne Lemay http://heliom.ca
+* Released under the MIT license
+*/
 
-  // RequireJS
-  } else if (typeof define === "function" && define.amd) {
-    define(['react'], f);
+(function (root, factory) {
+  // AMD
+  if (typeof define === 'function' && define.amd) {
+    define(['React'], factory)
 
-  // <script>
+  // Node.js or CommonJS
+  } else if (typeof exports !== 'undefined') {
+    module.exports = factory(require('react'))
+
+  // Browser globals
   } else {
-    var g
-    if (typeof window !== "undefined") {
-      g = window;
-    } else if (typeof global !== "undefined") {
-      g = global;
-    } else if (typeof self !== "undefined") {
-      g = self;
-    } else {
-      // works providing we're not in "use strict";
-      // needed for Java 8 Nashorn
-      // see https://github.com/facebook/react/issues/3037
-      g = this;
+    root.DOM = factory(root.React)
+  }
+}(this, function (React) {
+  var DOM, key, value, ref, bridge
+
+  DOM = {}
+  ref = React.DOM
+
+  proxy = function(key, value) {
+    // Only proxy `React.DOM.<element>` functions
+    if (typeof value !== 'function') { return }
+
+    DOM[key] = function(opts, children) {
+      var extractObjectsAsKeys
+
+      // Make the `opts` argument optional
+      if (children === void 0) {
+        children = opts
+        opts = null
+      }
+
+      // Nest `data` attributes
+      if (opts && opts.data) {
+        extractObjectsAsKeys = function(data, root) {
+          var dataKey, dataValue
+          if (root == null) { root = '' }
+
+          for (dataKey in data) {
+            dataValue = data[dataKey]
+
+            // Instance of Array
+            if (dataValue instanceof Array) {
+              var i, arrayValue
+              for (i = 0; i < dataValue.length; i++) {
+                arrayValue = dataValue[i]
+                opts['data' + (root + '-' + dataKey + '-' + arrayValue)] = true
+              }
+
+              continue
+
+            // Instance of Object
+            } else if (dataValue instanceof Object) {
+              extractObjectsAsKeys(dataValue, (root + dataKey) + '-')
+              continue
+            }
+
+            opts['data-' + (root + dataKey)] = dataValue
+          }
+        }
+
+        extractObjectsAsKeys(opts.data)
+        delete opts.data
+      }
+
+      // Make `class` -> `className`
+      if (opts && opts.class) {
+        opts.className = opts.class
+        delete opts.class
+      }
+
+      // Relay to original `React.DOM.<element>`
+      return ref[key](opts, children)
     }
-    g.ReactDOM = f(g.React);
   }
 
-})(function(React) {
-  return React.__SECRET_DOM_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-});
+  // Scope proxy
+  for (key in ref) {
+    value = ref[key]
+    proxy(key, value)
+  }
+
+  return DOM
+}))

@@ -1,15 +1,10 @@
 {
-    "repos": "https://github.com/facebook/react.git",
     "name": "react-dom",
+    "description": "DOM is a `React.DOM` wrapper with — subjectively — more sanity and awesome helpers",
+    "repos": "https://github.com/EtienneLem/react-dom.git",
     "main": "react-dom.js",
-    "dependencies": {
-        "react": "^0.14.2"
-    },
-    "version": "0.14.5",
-    "description": "React package for working with the DOM.",
     "tag": "master",
     "reposType": "npm",
-    "paths": {
-        "dist": "."
-    }
+    "dependencies": {},
+    "version": "0.1.0"
 }
