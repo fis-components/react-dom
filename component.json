@@ -6,10 +6,10 @@
     "tag": "master",
     "reposType": "npm",
     "dependencies": {
-        "react": "^0.14.8"
+        "react": "^0.14.7"
     },
     "paths": {
         "dist": "."
     },
-    "version": "0.14.0"
+    "version": "0.14.8"
 }
